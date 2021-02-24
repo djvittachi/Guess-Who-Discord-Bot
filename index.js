@@ -26,10 +26,11 @@ function sendPicture(gameObj, canvas, playerRemoving) {
 }
 
 async function combineImages(canvas, avatars) {
-
-	let movement = 0; // This keeps track of the canvas movement
-
-	for (const avatar of avatars) {
+	// This keeps track of the canvas movement
+	let movement = 0;
+	
+	// Read avatars in parallel for a speed improvement
+	await Promise.all(avatars.map(async (avatar) => {
 		const avatarURL = avatar.avatarURL({ format: "png" });
 		await Jimp.read(avatarURL).then(async (newImage) => {
 			await newImage.resize(100, 100);
@@ -37,7 +38,7 @@ async function combineImages(canvas, avatars) {
 			await canvas.composite(newImage, movement % 500, Math.floor(movement / 500) * 100);
 			movement += 100;
 		});
-	}
+	}));
 }
 
 async function stitchAvatars(gameObj, avatars, playerRemoving) {
@@ -62,7 +63,7 @@ async function generateGame(gameObj) {
 
 		});
 	});
-	// Avatars complete, choose random characters
+	// Choose random characters from the avatars array
 	gameObj.playerOneCharacter = avatars[Math.floor(Math.random() * avatars.length)];
 	gameObj.playerTwoCharacter = avatars[Math.floor(Math.random() * avatars.length)];
 
@@ -149,6 +150,7 @@ client.on("message", (message) => {
 		} else if (!message.mentions.users || !message.mentions.users.first()) {
 			message.channel.send("You must mention someone");
 		} else if (message.author.id === gameObj.playerOne.id) {
+
 			if (message.mentions.users.first().id === gameObj.playerOneCharacter.id) {
 				message.channel.send("Correct, you won!");
 				// Reset game on this server
@@ -157,6 +159,7 @@ client.on("message", (message) => {
 				message.channel.send("nope");
 			}
 		} else if (message.author.id === gameObj.playerTwo.id) {
+
 			if (message.mentions.users.first().id === gameObj.playerTwoCharacter.id) {
 				message.channel.send("Correct, you won!");
 				// Reset game on this server
