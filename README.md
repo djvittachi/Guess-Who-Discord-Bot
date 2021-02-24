@@ -5,7 +5,7 @@
 <img src = "https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/1140x_a10-7_cTC/questionmark1-1563038597.jpg" height = 200px> </img> <br/>
  1. ^begin @personyouwanttoplaywith : To initiate a game of Guess Who <br/>
  2. ^remove @useryouwanttoremovefromthecollage : To "knock" out a tile from the collage who you don't think is the answer <br/>
- 3.   3. ^guess @youranswer : For when you think you know who it is <br/>
+ 3. ^guess @youranswer : For when you think you know who it is <br/>
 
 
 <h1> Problems with this bot </h1>
