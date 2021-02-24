@@ -1,18 +1,20 @@
 {
-  "name": "dndwithdan",
+  "name": "Guess-Who-Discord-Bot",
   "version": "1.0.0",
-  "description": "A D&D bot",
+  "description": "Discord bot that emulates the popular board game Guess Who",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "engines": {
+    "node": "12.x",
+    "npm": "*"
   },
-  "author": "",
-  "license": "UNLICENSED",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "djvittachi",
+  "license": "MIT",
   "dependencies": {
-    "@discordjs/opus": "^0.4.0",
     "discord.js": "^12.4.1",
-    "express": "^4.17.1",
-    "ffmpeg-static": "^4.2.7",
     "jimp": "^0.16.1"
   }
 }
