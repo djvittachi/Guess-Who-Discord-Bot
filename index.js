@@ -8,7 +8,6 @@ client.login(config.BOT_TOKEN);
 
 const prefix = "^";
 let avatars = [];
-let remove = false;
 let playerOne;
 let playerTwo;
 let playerOneCharacter = "";
@@ -19,40 +18,8 @@ let playerRemoving;
 let playerOneCharacterUsername = "";
 let playerTwoCharacterUsername = "";
 
-async function fetchUsers(user, collage, members) {
-
-	await client.users.fetch(user.id).then((newUser) => {
-
-		let newAvatar = newUser.displayAvatarURL({ format: "png" });
-		avatars.push(newAvatar + "|" + newUser.id);
-
-		if (avatars.length === members.size) {
-			if (avatars.length > 10) {
-				avatars = avatars.slice(0, 10);
-			}
-
-			let playerOneIndex = Math.floor(Math.random() * avatars.length);
-			let playerTwoIndex = Math.floor(Math.random() * avatars.length);
-
-			let playerOneCharacterData = avatars[playerOneIndex].split("|");
-			playerOneCharacter = playerOneCharacterData[1];
-
-			let playerTwoCharacterData = avatars[playerTwoIndex].split("|");
-			playerTwoCharacter = playerTwoCharacterData[1];
-
-			playerOneCharacterUsername = client.users.cache.get(playerOneCharacter).username;
-			playerTwoCharacterUsername = client.users.cache.get(playerTwoCharacter).username;
-
-			playerOneAvatars = avatars.slice(0, 10);
-			playerTwoAvatars = avatars.slice(0, 10);
-
-			collage();
-		}
-	});
-}
-
-//Function to send picture when it's all stitched together
-function sendPicture(canvas) {
+// Function to send picture when it's all stitched together
+function sendPicture(canvas, remove) {
 	canvas.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
 		if (err) {
 			console.error(err);
@@ -94,21 +61,46 @@ async function combineImages(canvas) {
 	}
 }
 
-async function stitchAvatars() {
+async function stitchAvatars(remove) {
 	const canvas = new Jimp(500, 200);
 	await combineImages(canvas);
-	sendPicture(canvas);
+	sendPicture(canvas, remove);
 }
 
-function generateGame(message) {
-	const server = message.guild;
+function generateGame(message, remove) {
 	// This gets all the necessary user details and then uses the callback function stitchAvatars() in order to combine the pictures when it's done fetching
 	if (remove) {
-		stitchAvatars();
+		stitchAvatars(remove);
 	} else {
-		server.members.fetch().then((members) => {
-			members.forEach((user) => {
-				fetchUsers(user, stitchAvatars, members);
+		message.guild.members.fetch().then((members) => {
+			members.forEach((member) => {
+
+				let newAvatar = member.user.displayAvatarURL({ format: "png" });
+				avatars.push(newAvatar + "|" + member.id);
+
+				if (avatars.length === members.size) {
+
+					// Avatars complete, begin game
+
+					if (avatars.length > 10) {
+						avatars = avatars.slice(0, 10);
+					}
+
+					let playerOneCharacterData = avatars[Math.floor(Math.random() * avatars.length)].split("|");
+					playerOneCharacter = playerOneCharacterData[1];
+
+					let playerTwoCharacterData = avatars[Math.floor(Math.random() * avatars.length)].split("|");
+					playerTwoCharacter = playerTwoCharacterData[1];
+
+					playerOneCharacterUsername = client.users.cache.get(playerOneCharacter).username;
+					playerTwoCharacterUsername = client.users.cache.get(playerTwoCharacter).username;
+
+					// Clone the array to ensure playerOneAvatars and playerTwoAvatars are separate
+					playerOneAvatars = avatars.slice(0, 10);
+					playerTwoAvatars = avatars.slice(0, 10);
+
+					stitchAvatars(remove);
+				}
 			});
 		});
 	}
@@ -123,7 +115,7 @@ client.on("message", (message) => {
 
 	const commandBody = message.content.slice(prefix.length);
 	const args = commandBody.split(" ");
-	const command = args.shift().toLowerCase();
+	const command = args[0].toLowerCase();
 
 	if (command === "begin") {
 
@@ -141,7 +133,7 @@ client.on("message", (message) => {
 
 	} else if (command === "remove") {
 
-		//validation
+		// Validation
 		if (!avatars) {
 			message.reply("No games going on ");
 			return;
@@ -157,14 +149,15 @@ client.on("message", (message) => {
 		}
 
 		let userToRemove = message.mentions.users.first().id;
-		let i = 0;
-		let userFound = false;
-		while (!userFound || i < avatars.length) {
+
+		for (let i = 0; i < avatars.length; i++) {
+
 			let userInfo = avatars[i].split("|");
 			let userID = userInfo[1];
+
 			if (userToRemove === userID) {
 				message.reply("Removing that user ASAP :)");
-				userFound = true;
+
 				if (playerRemoving.id === playerOne.id) {
 					playerOneAvatars.splice(i, 1);
 					avatars = Array.from(playerOneAvatars);
@@ -172,12 +165,12 @@ client.on("message", (message) => {
 					playerTwoAvatars.splice(i, 1);
 					avatars = Array.from(playerTwoAvatars);
 				}
-				remove = true;
-				generateGame(message);
-			}
-			i++;
-		}
 
+				generateGame(message, true);
+				// User has been found, end the loop here
+				break;
+			}
+		}
 	} else if (command === "guess") {
 
 		if (!message.mentions.users || !message.mentions.users.first()) {
