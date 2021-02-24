@@ -39,9 +39,9 @@ Remember <b>that</b> game? Well so did I a few days ago. "Wish I could play that
 
 But I knew this wouldn't be feasible. How on Earth could I stitch together an array of avatar URL's on command into a collage and then send it back to an user
 
-After digging through StackExchange forums like a rabid gopher, I found the answer in the form of this red crayon here. <a href="https://www.npmjs.com/package/jimp"> JIMP </a> , as the creators call it. An NPM that allows for image manipulation for Node.JS applications.
+After digging through StackExchange forums like a rabid gopher, I found the answer in the form of this red crayon here. <a href="https://www.npmjs.com/package/jimp">JIMP</a>, as the creators call it. An NPM that allows for image manipulation for Node.JS applications.
 
-3 days of Maths, semantics and brainstorming later, I had a functional Guess Who Discord bot. While it was functional, it was also far from being efficient. I reached out to a few Uni friends to help me streamline the code and <a href="https://github.com/MysteryPancake"> MysteryPancake </a> was instrumental in making this happen. As I've only been
+3 days of Maths, semantics and brainstorming later, I had a functional Guess Who Discord bot. While it was functional, it was also far from being efficient. I reached out to a few Uni friends to help me streamline the code and <a href="https://github.com/MysteryPancake">MysteryPancake</a> was instrumental in making this happen. As I've only been
 learning Javascript for a short amount of time, he helped transform the code into something usable (and readable). A large portion of this project would've fallen short without that input so please go check out his work.
 
 With all this being said, we're not looking to maintain this code past what we've already provided. This is meant to provide base functionality for a Guess Who game and our 
@@ -53,4 +53,3 @@ Thanks for checking out our bot,
 Regards,
 
 Daniel
-
