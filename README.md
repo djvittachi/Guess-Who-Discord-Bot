@@ -4,11 +4,11 @@
 <p float="left">
  
   <a href="https://github.com/MysteryPancake">
-    <img src="https://avatars.githubusercontent.com/u/29562434?s=460&u=8599adbb59cfe4ddc8bdac4db5266426459ba9c8&v=4" width="100"/> 
+    <img src="https://avatars.githubusercontent.com/u/29562434?s=400v=4" width="100"/> 
   </a>
    
   <a href="https://github.com/djvittachi">
-    <img src="https://avatars.githubusercontent.com/u/9063769?s=400&u=063c9934985c1ed394f71828d9b753571fe6f640&v=4" width="100"/> 
+    <img src="https://avatars.githubusercontent.com/u/9063769?s=400&v=4" width="100"/> 
   </a>
   
 </p>
