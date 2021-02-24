@@ -8,8 +8,7 @@ client.login(config.BOT_TOKEN);
 
 const prefix = "^";
 
-let gameObject = {
-}
+let gameObject = null;
 
 client.on("message", function(message) {
 
