@@ -1,4 +1,21 @@
 # Guess-Who-Discord-Bot
+<h1> Contributors </h1>
+ 
+ 
+  <p float="left">
+   <img src="https://avatars.githubusercontent.com/u/29562434?s=460&u=8599adbb59cfe4ddc8bdac4db5266426459ba9c8&v=4" width="100" /> 
+   <img src="https://avatars.githubusercontent.com/u/9063769?s=400&u=063c9934985c1ed394f71828d9b753571fe6f640&v=4" width="100" /> 
+   </p>
+   
+   
+<h1> About </h1>
+
+<img src = https://i.ibb.co/xG2L66s/Who-s-that.png height = 200px> </img>
+
+Who's that? is a Discord bot that emulates the popular board game Guess Who? When a game is initated on a server, the bot proceeds to stitch together a collage (Consisting 
+of a maximum of 10 users) and sends it to the two players. Each player receives the name of the user the other player is supposed to guess. Players then take turns guessing
+who their user is by asking questions about the people in the collage in order to gain information. This bot even allows users to remove pictures from the collage
+to emulate the real life experience of knocking down the tiles to narrow down their options.
 
 <h1> Commands </h1>
 
@@ -7,13 +24,7 @@
  2. ^remove @useryouwanttoremovefromthecollage : To "knock" out a tile from the collage who you don't think is the answer <br/>
  3. ^guess @youranswer : For when you think you know who it is <br/>
 
-<h1> Contributors </h1>
- 
- 
-  <p float="left">
-   <img src="https://avatars.githubusercontent.com/u/29562434?s=460&u=8599adbb59cfe4ddc8bdac4db5266426459ba9c8&v=4" width="100" /> 
-   <img src="https://avatars.githubusercontent.com/u/9063769?s=400&u=063c9934985c1ed394f71828d9b753571fe6f640&v=4" width="100" /> 
-   </p>
+
   
 
 <h1 > Story Behind The Bot </h1>
@@ -24,9 +35,7 @@ Remember <b> that </b> game? Well so did I a few days ago. "Wish I could play th
 
 But I knew this wouldn't be feasible. How on Earth could I stitch together an array of avatar URL's on command into a collage and then send it back to an user
 
-<img src = https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/crayon.png height = 200px> </img>
-
-After digging through StackExchange forums like a rabid gopher, I found the answer in the form of this red crayon here. JIMP, as the creators call it. An NPM that allows for image manipulation for Node.JS applications.
+After digging through StackExchange forums like a rabid gopher, I found the answer in the form of this red crayon here. <a href = "https://www.npmjs.com/package/jimp"> JIMP </a> , as the creators call it. An NPM that allows for image manipulation for Node.JS applications.
 
 3 days of Maths, semantics and brainstorming later, I had a functional Guess Who Discord bot. While it was functional, it was also far from being efficient. I reached out to a few Uni friends to help me streamline the code and <a href = "https://github.com/MysteryPancake"> MysteryPancake </a> was instrumental in making this happen. As I've only been
 learning Javascript for a short amount of time, he helped transform the code into something usable (and readable). A large portion of this project would've fallen short without that input so please go check out his work.
@@ -37,6 +46,7 @@ relation to any of your completed work.
 
 Thanks for checking out our bot,
 
-Regards
+Regards,
+
 Daniel
 
