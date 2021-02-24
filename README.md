@@ -3,11 +3,11 @@
 
 <p float="left">
  
-  <a href="https://github.com/MysteryPancake">
+ <a href="https://github.com/djvittachi">
     <img src="https://avatars.githubusercontent.com/u/29562434?s=400v=4" width="100"/> 
   </a>
    
-  <a href="https://github.com/djvittachi">
+  <a href="https://github.com/MysteryPancake"> 
     <img src="https://avatars.githubusercontent.com/u/9063769?s=400&v=4" width="100"/> 
   </a>
   
