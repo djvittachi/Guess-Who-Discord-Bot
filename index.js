@@ -127,7 +127,7 @@ client.on("message", (message) => {
 		playerOne = message.author;
 		playerTwo = message.mentions.users.first();
 
-		generateGame(message);
+		generateGame(message, false);
 
 		message.channel.send("Your game is generating, this will take a little under a minute so please bear with the bot :)");
 
