@@ -21,7 +21,7 @@ Who's that? is a Discord bot that emulates the popular board game Guess Who? Whe
 
 <h1>Commands</h1>
 
-<img src="https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/1140x_a10-7_cTC/questionmark1-1563038597.jpg" height="200" width = "1640"/>
+<img src="https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/1140x_a10-7_cTC/questionmark1-1563038597.jpg" height="200" width = "530"/>
 
 1. `^begin @personyouwanttoplaywith` : To initiate a game of Guess Who
 2. `^remove @useryouwanttoremovefromthecollage` : To "knock" out a tile from the collage who you don't think is the answer
@@ -29,7 +29,7 @@ Who's that? is a Discord bot that emulates the popular board game Guess Who? Whe
 
 <h1>Story Behind The Bot</h1>
 
-<img src="https://cdn-gamesworldau.pressidium.com/wp-content/uploads/2020/05/guess-who-2.jpg" height="200" width = "1640"/>
+<img src="https://cdn-gamesworldau.pressidium.com/wp-content/uploads/2020/05/guess-who-2.jpg" height="200" width = "530"/>
 
 Remember <b>that</b> game? Well so did I a few days ago. "Wish I could play that again" I thought to myself. All the while, my Discord chat interface was open on my second screen. The member list caught my eye and then I wondered, "It'd be pretty cool if I could use all those avatars for a collage so that two people could play Guess Who at any given time. But this time it would be even better because the questions they'd ask each other wouldn't be restricted to the superficial, but also what they personally know about each other".
 
