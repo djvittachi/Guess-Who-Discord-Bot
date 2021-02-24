@@ -180,7 +180,7 @@ client.on("message", function(message) {
       if (command == "remove") {
 
         //validation
-          if(!gameObject[message.channel.id].avatars) {message.reply("No games going on ");return;}
+          if(!gameObject) {message.reply("No games going on ");return;}
           if (!message.mentions.users) {message.reply("You must mention someone");return;};
 
           if(message.author.id == gameObject[message.channel.id].playerOne) {
@@ -215,7 +215,7 @@ client.on("message", function(message) {
 
       if (command == "guess") {
         if (!message.mentions.users) {message.channel.send("You must mention someone");return};
-        if(!gameObject[message.channel.id].avatars) {message.channel.send("No games going on ");return;}
+        if(!gameObject) {message.channel.send("No games going on ");return;}
         
         if(message.author.id == gameObject[message.channel.id].playerOne) {
             if(message.mentions.users.first().id == gameObject[message.channel.id].playerOneCharacter) {message.channel.send("Correct, you won!"); gameObject[message.channel.id].avatars = null}
