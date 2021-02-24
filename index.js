@@ -79,6 +79,7 @@ client.on("message", (message) => {
 	if (message.author.bot || !message.content.startsWith(prefix)) return;
 	if (!message.guild) {
 		message.channel.send("You tryna make me crash bro?");
+		return;
 	}
 
 	const commandBody = message.content.slice(prefix.length);
