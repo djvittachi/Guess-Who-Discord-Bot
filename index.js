@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const config = require("./config.json");
-var Jimp = require('jimp');
+const Jimp = require("jimp");
 
 const client = new Discord.Client();
 
@@ -9,228 +9,198 @@ client.login(config.BOT_TOKEN);
 const prefix = "^";
 let avatars = [];
 let remove = false;
-let playerOne = "";
-let playerTwo = "";
+let playerOne;
+let playerTwo;
 let playerOneCharacter = "";
 let playerTwoCharacter = "";
 let playerOneAvatars = [];
 let playerTwoAvatars = [];
-let playerRemoving = "0";
+let playerRemoving;
 let playerOneCharacterUsername = "";
 let playerTwoCharacterUsername = "";
 
+async function fetchUsers(user, collage, members) {
 
-client.on("message", function(message) {
+	await client.users.fetch(user.id).then((newUser) => {
 
-    if (message.author.bot) return;
-    if (!message.guild) {message.channel.send("You tryna make me crash bro?")};
-    if (!message.content.startsWith(prefix)) return;
+		let newAvatar = newUser.displayAvatarURL({ format: "png" });
+		avatars.push(newAvatar + "|" + newUser.id);
 
-    const commandBody = message.content.slice(prefix.length);
-    const args = commandBody.split(' ');
-    const command = args.shift().toLowerCase();
+		if (avatars.length === members.size) {
+			if (avatars.length > 10) {
+				avatars = avatars.slice(0, 10);
+			}
 
+			let playerOneIndex = Math.floor(Math.random() * avatars.length);
+			let playerTwoIndex = Math.floor(Math.random() * avatars.length);
 
-    //Function to send picture when it's all stitched together
-    function sendPicture() {if (remove == false){
-        client.users.cache.get(playerOne).send("The user that player two has to guess is" + " " + playerTwoCharacterUsername,{files: ["public/image/game.jpg"]})
-        client.users.cache.get(playerTwo).send("The user that player one has to guess is" + " " + playerOneCharacterUsername,{ files: ["public/image/game.jpg"]})
-    }
-    
-    else if (playerRemoving == playerOne) {client.users.cache.get(playerOne).send({ files: ["public/image/game.jpg"]})}
-    else if (playerRemoving == playerTwo) {client.users.cache.get(playerTwo).send({ files: ["public/image/game.jpg"]})};
-        
-        
-    }
+			let playerOneCharacterData = avatars[playerOneIndex].split("|");
+			playerOneCharacter = playerOneCharacterData[1];
 
-    if (command == "begin") {
-        if (!message.mentions.users.first()||  !message.mentions.users) {message.channel.send("You must mention someone to play with");return};
-        playerOne = message.author.id;
-        playerTwo = message.mentions.users.first().id;
-        generateGame(); 
-        message.channel.send("Your game is generating, this will take a little under a minute so please bear with the bot :)");
-    }
+			let playerTwoCharacterData = avatars[playerTwoIndex].split("|");
+			playerTwoCharacter = playerTwoCharacterData[1];
 
-    function  generateGame() {
-        let gameSize = 0;
-        const server = client.guilds.cache.get(message.guild.id);
+			playerOneCharacterUsername = client.users.cache.get(playerOneCharacter).username;
+			playerTwoCharacterUsername = client.users.cache.get(playerTwoCharacter).username;
 
+			playerOneAvatars = avatars.slice(0, 10);
+			playerTwoAvatars = avatars.slice(0, 10);
 
-    // This function gets all the necessary user details and then uses the callback function stitchAvatars() in order to combine the pictures when it's done fetching
-        let fetchAvatars = (collage) => { 
-            if(!remove) {
-            server.members.fetch().then((members) => {
-                members.forEach(user => {
-                    fetchUsers(user, collage, members)
+			collage();
+		}
+	});
+}
 
-                })
-            })}
-            else{collage();}
-        }
+//Function to send picture when it's all stitched together
+function sendPicture(canvas) {
+	canvas.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
+		if (err) {
+			console.error(err);
+		} else if (remove === false) {
+			playerOne.send(`The user that player two has to guess is ${playerTwoCharacterUsername}`, { files: [buffer] });
+			playerTwo.send(`The user that player one has to guess is ${playerOneCharacterUsername}`, { files: [buffer] });
+		} else if (playerRemoving.id === playerOne.id) {
+			playerOne.send({ files: [buffer] });
+		} else if (playerRemoving.id === playerTwo.id) {
+			playerTwo.send({ files: [buffer] });
+		}
+	});
+}
 
-        async function fetchUsers(user, collage, members) {
+async function combineImages(canvas) {
 
-            await client.users.fetch(user.id).then(newUser => {
-                let newAvatar = newUser.avatarURL({
-                    format: 'png'
-                });
+	let i = 0; // This keeps track of how many avatars have been checked
+	let movement = 0; // This keeps track of the canvas movement
 
-                avatars.push(newAvatar + "|" + newUser.id);
-                if (avatars.length == members.size) {
-                   if(avatars.length>10) {
-                       avatars = avatars.slice(0,10);
-                   }
-                    
+	for (const avatar of avatars) {
 
-                    let playerOneIndex = Math.floor(((Math.random())*avatars.length))
-                    let playerTwoIndex = Math.floor(((Math.random())*avatars.length))
+		let newData = avatar.split("|");
 
-                    let playerOneCharacterData = avatars[playerOneIndex].split("|");
-                    playerOneCharacter = playerOneCharacterData[1];
+		await Jimp.read(newData[0]).then(async (newImage) => {
 
-                    let playerTwoCharacterData = avatars[playerTwoIndex].split("|");
-                    playerTwoCharacter = playerTwoCharacterData[1];
+			await newImage.resize(100, 100);
 
-                    playerOneCharacterUsername = client.users.cache.get(playerOneCharacter).username;
-                    playerTwoCharacterUsername = client.users.cache.get(playerTwoCharacter).username;
+			// Keeps incrementing on the x-axis until it reaches the boundary, at which point it starts placing on the second row by adjusting the y and x accordingly
+			await canvas.composite(newImage, movement % 500, Math.floor(movement / 500) * 100);
+			movement += 100;
+		});
 
-                    playerOneAvatars = avatars.slice(0,10);
-                    playerTwoAvatars = avatars.slice(0,10);
+		// limits the game size to 10 players for obvious reasons
+		// This code is a bit trash but I'm not sure of a better way
+		i++;
+		if (i > 10) {
+			break;
+		}
+	}
+}
 
+async function stitchAvatars() {
+	const canvas = new Jimp(500, 200);
+	await combineImages(canvas);
+	sendPicture(canvas);
+}
 
-                    collage()
-                };
+function generateGame(message) {
+	const server = message.guild;
+	// This gets all the necessary user details and then uses the callback function stitchAvatars() in order to combine the pictures when it's done fetching
+	if (remove) {
+		stitchAvatars();
+	} else {
+		server.members.fetch().then((members) => {
+			members.forEach((user) => {
+				fetchUsers(user, stitchAvatars, members);
+			});
+		});
+	}
+}
 
+client.on("message", (message) => {
 
+	if (message.author.bot || !message.content.startsWith(prefix)) return;
+	if (!message.guild) {
+		message.channel.send("You tryna make me crash bro?");
+	}
 
-            })
-        }
+	const commandBody = message.content.slice(prefix.length);
+	const args = commandBody.split(" ");
+	const command = args.shift().toLowerCase();
 
+	if (command === "begin") {
 
-        function stitchAvatars() {
-           
-          
-          // I can't remember why I wanted it to place the first image out of the loop but there was a reason
-            let data = avatars[0].split("|");
-            Jimp.read(data[0])
-                .then(image => {
-                    // Do stuff with the image.
-                    let canvas = new Jimp(500, 200);
-                    image.resize(100, 100);
-                    canvas.composite(image, 0, 0);
-                    let horizontalMovement = 0;
-                    let verticalMovement = 0;
+		if (!message.mentions.users || !message.mentions.users.first()) {
+			message.channel.send("You must mention someone to play with");
+			return;
+		}
 
+		playerOne = message.author;
+		playerTwo = message.mentions.users.first();
 
+		generateGame(message);
 
-                    let combineImages = (saveImages) => {
-                        
-                        if (avatars.length > 10) {
-                            gameSize = 10; //limits the game size to 10 players for obvious reasons
-                        } 
-                        
-                        else {
-                            gameSize = avatars.length; //in case there's less than 10 people in the server
-                        };
-                        for (let i = 1; i < gameSize; i++) {
-                            let newData = avatars[i].split("|");
-                            Jimp.read(newData[0]).then(newImage => {
+		message.channel.send("Your game is generating, this will take a little under a minute so please bear with the bot :)");
 
+	} else if (command === "remove") {
 
-                               //Keeps incrementing on the x-axis until it reaches the boundary, at which point it starts placing on the second row by adjusting the y and x accordingly
-                                if (horizontalMovement < 400) {
-                                    horizontalMovement = horizontalMovement + 100;
-                                } else {
-                                    horizontalMovement = 0;
-                                    verticalMovement = 100;
-                                }
-                                newImage.resize(100, 100);
-                                canvas.composite(newImage, horizontalMovement, verticalMovement)
+		//validation
+		if (!avatars) {
+			message.reply("No games going on ");
+			return;
+		} else if (!message.mentions.users || !message.mentions.users.first()) {
+			message.reply("You must mention someone");
+			return;
+		}
 
+		if (message.author.id === playerOne.id) {
+			playerRemoving = playerOne;
+		} else if (message.author.id === playerTwo.id) {
+			playerRemoving = playerTwo;
+		}
 
+		let userToRemove = message.mentions.users.first().id;
+		let i = 0;
+		let userFound = false;
+		while (!userFound || i < avatars.length) {
+			let userInfo = avatars[i].split("|");
+			let userID = userInfo[1];
+			if (userToRemove === userID) {
+				message.reply("Removing that user ASAP :)");
+				userFound = true;
+				if (playerRemoving.id === playerOne.id) {
+					playerOneAvatars.splice(i, 1);
+					avatars = Array.from(playerOneAvatars);
+				} else if (playerRemoving.id === playerTwo.id) {
+					playerTwoAvatars.splice(i, 1);
+					avatars = Array.from(playerTwoAvatars);
+				}
+				remove = true;
+				generateGame(message);
+			}
+			i++;
+		}
 
+	} else if (command === "guess") {
 
-                            })
-                        };
-                        // I didn't know how else to wait for the compositing to finish lol
-                        setTimeout(function() {
-                            saveImages()
-                        }, 5000)
-                    }
+		if (!message.mentions.users || !message.mentions.users.first()) {
+			message.channel.send("You must mention someone");
+		} else if (!avatars) {
+			message.channel.send("No games going on");
+		} else if (message.author.id === playerOne.id) {
+			if (message.mentions.users.first().id === playerOneCharacter) {
+				message.channel.send("Correct, you won!");
+				avatars = null;
+			} else {
+				message.channel.send("nope");
+			}
+		} else if (message.author.id === playerTwo.id) {
+			if (message.mentions.users.first().id === playerTwoCharacter) {
+				message.channel.send("Correct, you won!");
+				avatars = null;
+			} else {
+				message.channel.send("nope");
+			}
+		} else {
+			message.channel.send("nope");
+		}
 
-                    function saveImage() {
-                        canvas.write("public/image/game.jpg", err => console.error('write error: ', err))
-                        setTimeout(function() {
-                            sendPicture()
-                        }, 2000);
-                    }
-                    
-                    combineImages(saveImage);
-
-                }).catch(err => { // Handle an exception.
-                });
-
-
-        }
-
-        fetchAvatars(stitchAvatars);
-      }
-
-  
-
-      if (command == "remove") {
-
-        //validation
-          if(!avatars) {message.reply("No games going on ");return;}
-          if (!message.mentions.users.first()|| !message.mentions.users) {message.reply("You must mention someone");return;};
-
-          if(message.author.id == playerOne) {
-              playerRemoving = playerOne;
-          }
-
-          if (message.author.id == playerTwo) {
-              playerRemoving = playerTwo;
-          }
-
-          let userToRemove = message.mentions.users.first().id;
-          let i = 0;
-          let userFound = false;
-
-          while(!userFound || i < avatars.length) {
-              let userInfo = avatars[i].split("|");
-              let userID = userInfo[1];
-
-              if (userToRemove == userID) {
-                  message.reply("Removing that user ASAP :)")
-                  userFound = true;
-                  if (playerRemoving == playerOne) {playerOneAvatars.splice(i,1);avatars = Array.from(playerOneAvatars);}
-                  if (playerRemoving == playerTwo) {playerTwoAvatars.splice(i,1);avatars = Array.from(playerTwoAvatars);}
-                  remove = true;
-                  generateGame();
-              }
-              i++;
-          }
-
-
-      }
-
-      if (command == "guess") {
-        if (!message.mentions.users.first() || !message.mentions.users) {message.channel.send("You must mention someone");return};
-        if(!avatars) {message.channel.send("No games going on ");return;}
-        
-        if(message.author.id == playerOne) {
-            if(message.mentions.users.first().id == playerOneCharacter) {message.channel.send("Correct, you won!"); avatars = null}
-            else{message.channel.send("nope")};
-        }
-
-        if(message.author.id == playerTwo) {
-            if(message.mentions.users.first().id == playerTwoCharacter) {message.channel.send("Correct, you won!"); avatars = null}
-            else{message.channel.send("nope")};
-        }
-
-
-
-    }
-
-
+	}
 });
