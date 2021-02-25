@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const config = require("./config.json");
 const Jimp = require("jimp");
+const tfa = require('text-fonts-api')
 
 const client = new Discord.Client();
 
@@ -9,14 +10,44 @@ client.login(config.BOT_TOKEN);
 const prefix = "^";
 const gameObject = {};
 
+
+
+function playerText(gameObj) {
+	return new Promise (resolve => {
+		let playerPictures = [];
+			
+		let playerOneIMG =   new tfa.geometryFont("player two's user is " + gameObj.playerTwoCharacter.username).normalFont()
+		let playerTwoIMG =   new tfa.geometryFont("player one's user is " + gameObj.playerOneCharacter.username).normalFont()
+
+		playerPictures.push(playerOneIMG)
+		playerPictures.push(playerTwoIMG)
+
+		resolve(playerPictures);
+
+	})
+}
 // Function to send picture when it's all stitched together
-function sendPicture(gameObj, canvas, playerRemoving) {
+ function sendPicture(gameObj, canvas, playerRemoving)  {
 	canvas.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
 		if (err) {
 			console.error(err);
 		} else if (!playerRemoving) {
-			gameObj.playerOne.send(`The user that player two has to guess is ${gameObj.playerTwoCharacter.username}`, { files: [buffer] });
-			gameObj.playerTwo.send(`The user that player one has to guess is ${gameObj.playerOneCharacter.username}`, { files: [buffer] });
+			
+			//image with dividers
+
+			playerText(gameObj).then((playerPictures) => {
+
+			gameObj.playerOne.send("https://i.ibb.co/Hg3K7mL/red-divider.png");
+		 	gameObj.playerOne.send(playerPictures[0], { files: [buffer] });
+			gameObj.playerOne.send("https://i.ibb.co/drbrD3f/image-1.png");
+
+			gameObj.playerTwo.send("https://i.ibb.co/Hg3K7mL/red-divider.png");
+			gameObj.playerTwo.send(playerPictures[1], { files: [buffer] });
+			gameObj.playerTwo.send("https://i.ibb.co/drbrD3f/image-1.png");
+
+			})
+
+			
 		} else if (playerRemoving.id === gameObj.playerOne.id) {
 			gameObj.playerOne.send({ files: [buffer] });
 		} else if (playerRemoving.id === gameObj.playerTwo.id) {
@@ -78,7 +109,7 @@ client.on("message", (message) => {
 
 	if (message.author.bot || !message.content.startsWith(prefix)) return;
 	if (!message.guild) {
-		message.channel.send("You tryna make me crash bro?");
+		message.channel.send("Please send commands within the server you're playing in! :)");
 		return;
 	}
 
@@ -96,6 +127,7 @@ client.on("message", (message) => {
 		const gameObj = {
 			playerOne: message.author,
 			playerTwo: message.mentions.users.first(),
+			playerTurn: message.author,
 			guild: message.guild
 		};
 
@@ -150,14 +182,18 @@ client.on("message", (message) => {
 			message.channel.send("No games going on");
 		} else if (!message.mentions.users || !message.mentions.users.first()) {
 			message.channel.send("You must mention someone");
-		} else if (message.author.id === gameObj.playerOne.id) {
+		} else if (gameObj.playerTurn.id != message.author.id) {
+			message.channel.send("It's not your turn");
+    	}else if (message.author.id === gameObj.playerOne.id) {
+			
 
 			if (message.mentions.users.first().id === gameObj.playerOneCharacter.id) {
 				message.channel.send("Correct, you won!");
 				// Reset game on this server
 				delete gameObject[message.guild.id];
 			} else {
-				message.channel.send("nope");
+				message.channel.send("That is not the correct user!");
+				gameObj.playerTurn = gameObj.playerTwo;
 			}
 		} else if (message.author.id === gameObj.playerTwo.id) {
 
@@ -166,10 +202,13 @@ client.on("message", (message) => {
 				// Reset game on this server
 				delete gameObject[message.guild.id];
 			} else {
-				message.channel.send("nope");
+				message.channel.send("That is not the correct user");
+				gameObj.playerTurn = gameObj.playerOne;
 			}
 		} else {
 			message.reply("You aren't playing a game");
 		}
 	}
+
+  
 });
