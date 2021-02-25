@@ -24,7 +24,7 @@ Who's that? is a Discord bot that emulates the popular board game Guess Who? Whe
 <img src="https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/1140x_a10-7_cTC/questionmark1-1563038597.jpg" height="200" width="300"/>
 
 1. `^begin @personyouwanttoplaywith` : To initiate a game of Guess Who
-2. `^remove @useryouwanttoremovefromthecollage` : To "knock" out a tile from the collage who you don't think is the answer
+2. `^remove @useryouwanttoremovefromthecollage` : To "knock" out a user from the collage who you don't think is the answer
 3. `^guess @youranswer` : For when you think you know who it is
 
 <h1>Story Behind The Bot</h1>
