@@ -15,8 +15,8 @@ function playerText(gameObj) {
 		
 		let playerPictures = [];
 
-		let playerOneIMG = new tfa.geometryFont(`player two's user is ${gameObj.playerTwoCharacter.username}`).normalFont();
-		let playerTwoIMG = new tfa.geometryFont(`player one's user is ${gameObj.playerOneCharacter.username}`).normalFont();
+		let playerOneIMG = new tfa.geometryFont("player two's user is " + gameObj.playerTwoCharacter.username).normalFont();
+		let playerTwoIMG = new tfa.geometryFont("player one's user is " + gameObj.playerOneCharacter.username).normalFont();
 
 		playerPictures.push(playerOneIMG);
 		playerPictures.push(playerTwoIMG);
