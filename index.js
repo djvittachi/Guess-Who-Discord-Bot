@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const config = require("./config.json");
 const Jimp = require("jimp");
-const tfa = require('text-fonts-api')
+const tfa = require("text-fonts-api");
 
 const client = new Discord.Client();
 
@@ -10,44 +10,41 @@ client.login(config.BOT_TOKEN);
 const prefix = "^";
 const gameObject = {};
 
-
-
 function playerText(gameObj) {
-	return new Promise (resolve => {
+	return new Promise((resolve) => {
+		
 		let playerPictures = [];
-			
-		let playerOneIMG =   new tfa.geometryFont("player two's user is " + gameObj.playerTwoCharacter.username).normalFont()
-		let playerTwoIMG =   new tfa.geometryFont("player one's user is " + gameObj.playerOneCharacter.username).normalFont()
 
-		playerPictures.push(playerOneIMG)
-		playerPictures.push(playerTwoIMG)
+		let playerOneIMG = new tfa.geometryFont(`player two's user is ${gameObj.playerTwoCharacter.username}`).normalFont();
+		let playerTwoIMG = new tfa.geometryFont(`player one's user is ${gameObj.playerOneCharacter.username}`).normalFont();
+
+		playerPictures.push(playerOneIMG);
+		playerPictures.push(playerTwoIMG);
 
 		resolve(playerPictures);
 
-	})
+	});
 }
 // Function to send picture when it's all stitched together
- function sendPicture(gameObj, canvas, playerRemoving)  {
+function sendPicture(gameObj, canvas, playerRemoving) {
 	canvas.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
 		if (err) {
 			console.error(err);
 		} else if (!playerRemoving) {
-			
+
 			//image with dividers
+			playerText(gameObj).then(async (playerPictures) => {
 
-			playerText(gameObj).then((playerPictures) => {
+				await gameObj.playerOne.send("https://i.ibb.co/Hg3K7mL/red-divider.png");
+				await gameObj.playerOne.send(playerPictures[0], { files: [buffer] });
+				await gameObj.playerOne.send("https://i.ibb.co/drbrD3f/image-1.png");
 
-			gameObj.playerOne.send("https://i.ibb.co/Hg3K7mL/red-divider.png");
-		 	gameObj.playerOne.send(playerPictures[0], { files: [buffer] });
-			gameObj.playerOne.send("https://i.ibb.co/drbrD3f/image-1.png");
+				await gameObj.playerTwo.send("https://i.ibb.co/Hg3K7mL/red-divider.png");
+				await gameObj.playerTwo.send(playerPictures[1], { files: [buffer] });
+				await gameObj.playerTwo.send("https://i.ibb.co/drbrD3f/image-1.png");
 
-			gameObj.playerTwo.send("https://i.ibb.co/Hg3K7mL/red-divider.png");
-			gameObj.playerTwo.send(playerPictures[1], { files: [buffer] });
-			gameObj.playerTwo.send("https://i.ibb.co/drbrD3f/image-1.png");
+			});
 
-			})
-
-			
 		} else if (playerRemoving.id === gameObj.playerOne.id) {
 			gameObj.playerOne.send({ files: [buffer] });
 		} else if (playerRemoving.id === gameObj.playerTwo.id) {
@@ -59,7 +56,7 @@ function playerText(gameObj) {
 async function combineImages(canvas, avatars) {
 	// This keeps track of the canvas movement
 	let movement = 0;
-	
+
 	// Read avatars in parallel for a speed improvement
 	await Promise.all(avatars.map(async (avatar) => {
 		const avatarURL = avatar.avatarURL({ format: "png" });
@@ -182,10 +179,9 @@ client.on("message", (message) => {
 			message.channel.send("No games going on");
 		} else if (!message.mentions.users || !message.mentions.users.first()) {
 			message.channel.send("You must mention someone");
-		} else if (gameObj.playerTurn.id != message.author.id) {
+		} else if (gameObj.playerTurn.id !== message.author.id) {
 			message.channel.send("It's not your turn");
-    	}else if (message.author.id === gameObj.playerOne.id) {
-			
+		} else if (message.author.id === gameObj.playerOne.id) {
 
 			if (message.mentions.users.first().id === gameObj.playerOneCharacter.id) {
 				message.channel.send("Correct, you won!");
@@ -195,6 +191,7 @@ client.on("message", (message) => {
 				message.channel.send("That is not the correct user!");
 				gameObj.playerTurn = gameObj.playerTwo;
 			}
+
 		} else if (message.author.id === gameObj.playerTwo.id) {
 
 			if (message.mentions.users.first().id === gameObj.playerTwoCharacter.id) {
@@ -205,10 +202,10 @@ client.on("message", (message) => {
 				message.channel.send("That is not the correct user");
 				gameObj.playerTurn = gameObj.playerOne;
 			}
+
 		} else {
 			message.reply("You aren't playing a game");
 		}
 	}
 
-  
 });
