@@ -17,7 +17,7 @@
 
 <img src="https://i.ibb.co/XYGyNvV/facebook-cover-photo-1.png" height="200" width = "300" />
 
-Who's that? is a Discord bot that emulates the popular board game Guess Who? When a game is initated on a server, the bot proceeds to stitch together a collage (Consisting of a maximum of 10 users) and sends it to the two players. Each player receives the name of the user the other player is supposed to guess. Players then take turns guessing who their user is by asking questions about the people in the collage in order to gain information. This bot even allows users to remove pictures from the collage to emulate the real life experience of knocking down the tiles to narrow down their options.
+Who's that? is a Discord bot that emulates the popular board game Guess Who? When a game is initiated on a server, the bot proceeds to stitch together a collage (Consisting of a maximum of 10 users) and sends it to the two players. Each player receives the name of the user the other player is supposed to guess. Players then take turns guessing who their user is by asking questions about the people in the collage in order to gain information. This bot even allows users to remove pictures from the collage to emulate the real life experience of knocking down the tiles to narrow down their options.
 
 <h1>Commands</h1>
 
