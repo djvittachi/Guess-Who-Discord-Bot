@@ -27,22 +27,3 @@ Who's that? is a Discord bot that emulates the popular board game Guess Who? Whe
 2. `^remove @useryouwanttoremovefromthecollage` : To "knock" out a user from the collage who you don't think is the answer
 3. `^guess @youranswer` : For when you think you know who it is
 
-<h1>Story Behind The Bot</h1>
-
-<img src="https://cdn-gamesworldau.pressidium.com/wp-content/uploads/2020/05/guess-who-2.jpg" height="200" width="300"/>
-
-Remember <b>that</b> game? Well so did I a few days ago. "Wish I could play that again" I thought to myself. All the while, my Discord chat interface was open on my second screen. The member list caught my eye and then I wondered, "It'd be pretty cool if I could use all those avatars for a collage so that two people could play Guess Who at any given time. But this time it would be even better because the questions they'd ask each other wouldn't be restricted to the superficial, but also what they personally know about each other".
-
-But I knew this wouldn't be feasible. How on Earth could I stitch together an array of avatar URL's on command into a collage and then send it back to an user
-
-After digging through StackExchange forums like a rabid gopher, I found the answer in the form of this red crayon here. <a href="https://www.npmjs.com/package/jimp">JIMP</a>, as the creators call it. An NPM that allows for image manipulation for Node.JS applications.
-
-3 days of Maths, semantics and brainstorming later, I had a functional Guess Who Discord bot. While it was functional, it was also far from being efficient. I reached out to a few Uni friends to help me streamline the code and <a href="https://github.com/MysteryPancake">MysteryPancake</a> was instrumental in making this happen. As I've only been learning Javascript for a short amount of time, he helped transform the code into something usable (and readable). A large portion of this project would've fallen short without that input so please go check out his work.
-
-With all this being said, we're not looking to maintain this code past what we've already provided. This is meant to provide base functionality for a Guess Who game and our focus was its core mechanics as opposed to aesthetics. With that being said, I'd love to see what you come up with using the code, so please feel free to reach out to me with relation to any of your completed work.
-
-Thanks for checking out our bot,
-
-Regards,
-
-Daniel
